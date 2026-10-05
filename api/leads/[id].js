@@ -1,6 +1,8 @@
 import { parseBody, sendJson, supabaseRequest, validateLead } from "../../lib/api-utils.js";
+import { requireAuth } from "../../lib/auth.js";
 
 export default async function handler(req, res) {
+  if (!requireAuth(req, res)) return;
   const id = req.query?.id;
   if (!id || !/^[0-9a-f-]{36}$/i.test(id)) return sendJson(res, 400, { error: "Invalid lead ID." });
 
@@ -39,3 +41,4 @@ export default async function handler(req, res) {
   res.setHeader("Allow", "PATCH, DELETE");
   return sendJson(res, 405, { error: "Method not allowed." });
 }
+

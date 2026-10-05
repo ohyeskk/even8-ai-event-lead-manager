@@ -16,6 +16,7 @@ const vite = await createViteServer({
 });
 
 const apiRoutes = [
+  { pattern: /^\/api\/auth$/, module: "/api/auth.js" },
   { pattern: /^\/api\/leads$/, module: "/api/leads.js" },
   { pattern: /^\/api\/leads\/([^/]+)$/, module: "/api/leads/[id].js", param: "id" },
   { pattern: /^\/api\/ai-summary$/, module: "/api/ai-summary.js" },
@@ -95,3 +96,4 @@ async function shutdown() {
 
 process.once("SIGINT", shutdown);
 process.once("SIGTERM", shutdown);
+

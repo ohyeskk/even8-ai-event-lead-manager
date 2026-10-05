@@ -1,5 +1,6 @@
 import process from "node:process";
 import { parseBody, sendJson } from "../lib/api-utils.js";
+import { requireAuth } from "../lib/auth.js";
 
 const SUMMARY_ERROR = "Gemini returned an incomplete summary. Please try again.";
 const GEMINI_BUSY_ERROR = "Gemini is temporarily busy. Please wait a moment and try again.";
@@ -40,6 +41,7 @@ export default async function handler(req, res) {
     res.setHeader("Allow", "POST");
     return sendJson(res, 405, { error: "Method not allowed." });
   }
+  if (!requireAuth(req, res)) return;
 
   let input;
   try {
@@ -103,3 +105,4 @@ export default async function handler(req, res) {
     return sendJson(res, 502, { error: "Could not reach Gemini. Check your connection and try again." });
   }
 }
+

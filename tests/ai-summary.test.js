@@ -2,9 +2,14 @@ import assert from "node:assert/strict";
 import process from "node:process";
 import test from "node:test";
 import handler from "../api/ai-summary.js";
+import { createSessionCookie } from "../lib/auth.js";
+
+process.env.APP_LOGIN_EMAIL = "owner@example.com";
+process.env.APP_LOGIN_PASSWORD = "test-owner-password";
+process.env.AUTH_SESSION_SECRET = "test-session-secret-that-is-long-enough";
 
 function postRequest(body) {
-  return { method: "POST", headers: {}, body };
+  return { method: "POST", headers: { cookie: createSessionCookie(process.env.APP_LOGIN_EMAIL) }, body };
 }
 
 function createResponse() {
@@ -193,4 +198,5 @@ test("a token-limited Gemini response is rejected even if it ends with punctuati
     else process.env.GEMINI_API_KEY = originalKey;
   }
 });
+
 

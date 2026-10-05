@@ -1,82 +1,81 @@
 # Gather — Even8 Event Lead Manager
 
-A small event lead manager built for the Even8 AI Native Full Stack Intern assignment. It keeps event contacts in one place and summarizes conversation notes with Gemini.
+A small AI-assisted event lead manager built for the Even8 AI Native Full Stack Intern assignment. Visitors can explore an interactive public demo, while the owner can sign in to manage private Supabase leads and generate Gemini summaries.
 
 ## Features
 
-- Add, edit, delete, search, and filter event leads.
-- Store a lead's name, company, email, event, notes, and follow-up status in Supabase Postgres.
-- Generate a concise AI summary of a lead's event notes with the Gemini API.
+- Add, edit, delete, search, and filter leads.
+- Track name, company, email, event, notes, and follow-up status.
+- Public demo edits stay in that visitor's browser and use fictional sample data.
+- Owner sign-in unlocks persistent Supabase CRUD and AI note summaries.
+- Gemini creates concise summaries from saved lead notes.
 - Responsive React interface for desktop and mobile.
-- Show a simple demo sign-in screen before opening the dashboard.
-- Keep database and AI credentials in server-side environment variables.
 
 ## Stack
 
 - React 19 and Vite for the frontend.
-- Small JavaScript API routes in `api/`, served locally with the bundled Node/Vite development runner and deployed as Vercel Functions.
-- Supabase Postgres for persistent lead storage.
-- Gemini `generateContent` API for note summaries.
+- JavaScript API routes in `api/`, served locally by the Node/Vite runner and deployed as Vercel Functions.
+- Supabase Postgres for the owner's persistent lead data.
+- Gemini `generateContent` API for owner-only note summaries.
 
-The frontend only calls this app's `/api` routes. The Supabase secret key and Gemini API key are read by the server functions and must never be prefixed with `VITE_` or committed to GitHub.
+The browser calls this app's `/api` routes. Supabase secret and Gemini API keys, owner credentials, and the session signing secret are server-side environment variables and must never use a `VITE_` prefix or be committed.
 
 ## Run locally
 
-1. Install Node.js 20 or newer.
-2. Install dependencies with `npm install`.
-3. Create a Supabase project and run [`db/schema.sql`](db/schema.sql) in the Supabase SQL Editor.
-4. Copy `.env.example` to `.env.local` and fill in the values from your Supabase project and Google AI Studio.
+1. Install Node.js 20 or newer and run `npm install`.
+2. Create a Supabase project and run [`db/schema.sql`](db/schema.sql) in its SQL Editor.
+3. Copy `.env.example` to `.env.local` and fill in all server environment variables.
+4. Use a long, unique owner password and generate a random session signing secret of at least 32 characters.
 5. Run `npm run dev` and open `http://localhost:3000`.
 
-The local runner serves the Vite app and forwards `/api` requests to the same JavaScript handlers used by Vercel. It reads `.env.local` and does not create, link, or deploy a Vercel project. The demo sign-in uses `jayesh@gmail.com` / `jayesh` in the browser and is not real security. The Gemini key is only needed for AI note summaries; the lead database works without it.
+The public preview works with fictional sample data without environment variables. Visitor edits remain in that browser. To test private Supabase CRUD and Gemini summaries locally, configure the owner and service environment variables first. `.env.local` is ignored by Git.
 
 ## Environment variables
 
-| Variable | Where to find it | Used for |
-| --- | --- | --- |
-| `SUPABASE_URL` | Supabase project settings | Server-side database REST requests |
-| `SUPABASE_SECRET_KEY` | Supabase project API keys | Server-side database access; never expose in the browser |
-| `GEMINI_API_KEY` | Google AI Studio | Server-side AI note summarization |
-| `GEMINI_MODEL` | Optional; defaults to `gemini-3.5-flash-lite` | Select the Gemini model |
+| Variable | Used for |
+| --- | --- |
+| `SUPABASE_URL` | Server-side database requests |
+| `SUPABASE_SECRET_KEY` | Private Supabase access from API routes only |
+| `GEMINI_API_KEY` | Owner-only server-side AI note summaries |
+| `GEMINI_MODEL` | Optional model selector; defaults to `gemini-3.5-flash-lite` |
+| `APP_LOGIN_EMAIL` | Single owner login email |
+| `APP_LOGIN_PASSWORD` | Single owner login password; use a long random value |
+| `AUTH_SESSION_SECRET` | Random secret used to sign HttpOnly owner sessions |
 
-Add the same variables to the Vercel project's environment settings before deployment. Do not share keys in chat, commit them, or include them in screenshots.
+Set these in Vercel Project Settings → Environment Variables for Production, Preview, and Development. Mark secret values sensitive/encrypted. The browser never receives them.
 
-## Deploy
+## Deployment
 
-1. Import this GitHub repository into Vercel.
-2. Add the environment variables above in the Vercel project settings.
-3. Deploy. Vercel builds the Vite app and serves the files in `api/` as server functions.
-4. Add the live URL to this README after deployment.
+The project is linked to the public GitHub repository [`ohyeskk/even8-ai-event-lead-manager`](https://github.com/ohyeskk/even8-ai-event-lead-manager). Add the environment variables in Vercel before deploying. The `api/` handlers run as Vercel Functions; the owner session cookie is HttpOnly, SameSite, and Secure in production.
 
-## Database
+## Database and access
 
-The schema is in `db/schema.sql`. It creates one `leads` table with a UUID primary key, required contact name and email, optional company/event/notes, a constrained follow-up status, and timestamps. The server accesses the table with Supabase's server-side secret key. Row Level Security is enabled, with no public anonymous table policies. The API routes are accessible without the demo login, so do not use this setup to protect private data.
+The schema in `db/schema.sql` creates one `leads` table with UUID IDs, required contact name and email, optional company/event/notes, a constrained follow-up status, timestamps, and row-level security. Anonymous visitors only receive fictional sample rows from the server and can change them in their own browser. Only the authenticated owner session can call lead mutations, read Supabase data, or generate summaries. The service key stays on the server.
 
 ## AI behavior
 
-`POST /api/ai-summary` sends only the lead's notes to Gemini and returns a concise plain-text summary. The API handler reads `GEMINI_API_KEY` on the server; the browser never receives the key. Empty notes are handled in the UI without calling Gemini, and the API validates notes independently. Summaries are shown in the interface and are not saved to the database.
+`POST /api/ai-summary` accepts notes only for an authenticated owner, sends them to Gemini, and returns concise plain text. Empty and incomplete responses are rejected, and temporary model unavailability is reported clearly. Summaries are not saved to the database.
 
 ## API
 
 | Method | Route | Purpose |
 | --- | --- | --- |
-| `GET` | `/api/leads` | List leads, newest first |
-| `POST` | `/api/leads` | Validate and create a lead |
-| `PATCH` | `/api/leads/:id` | Validate and update a lead |
-| `DELETE` | `/api/leads/:id` | Delete a lead |
-| `POST` | `/api/ai-summary` | Summarize a lead's notes with Gemini |
+| `GET` | `/api/auth` | Check owner session state |
+| `POST` | `/api/auth` | Sign in the owner |
+| `DELETE` | `/api/auth` | Sign out the owner |
+| `GET` | `/api/leads` | Return owner data or fictional public demo leads |
+| `POST` | `/api/leads` | Create an owner lead |
+| `PATCH` | `/api/leads/:id` | Update an owner lead |
+| `DELETE` | `/api/leads/:id` | Delete an owner lead |
+| `POST` | `/api/ai-summary` | Summarize owner lead notes |
 
-## Notes for the assignment demo
-
-Use fictional lead data in the public demo. The demo login is a visual gate only: its credentials are included in browser code, and the lead and AI APIs do not require sign-in. Do not use real or private lead data.
-
-## Requirement checklist
+## Assignment checklist
 
 - [x] Add, edit, delete, search, and filter leads
 - [x] Lead fields: name, company, email, event, notes, follow-up status
-- [x] Persistent database schema and API routes
-- [x] AI-generated note summary
+- [x] Supabase persistence for the owner
+- [x] Gemini note summarization
 - [x] Responsive UI
+- [x] Public interactive demo
 - [x] Setup and deployment documentation
-- [ ] Add the deployed URL after publishing
 
