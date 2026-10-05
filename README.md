@@ -2,6 +2,8 @@
 
 A small AI-assisted event lead manager built for the Even8 AI Native Full Stack Intern assignment. Visitors can explore an interactive public demo, while the owner can sign in to manage private Supabase leads and generate Gemini summaries.
 
+**Live demo:** [even8-ai-event-lead-manager-nine.vercel.app](https://even8-ai-event-lead-manager-nine.vercel.app/)
+
 ## Features
 
 - Add, edit, delete, search, and filter leads.
