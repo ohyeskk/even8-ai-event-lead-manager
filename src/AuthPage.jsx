@@ -1,8 +1,8 @@
 import { useState } from "react";
 import "./AuthPage.css";
 
-export default function AuthPage({ onAuthenticated, onCancel }) {
-  const [email, setEmail] = useState("");
+export default function AuthPage({ onAuthenticated }) {
+  const [email, setEmail] = useState("jayesh@gmail.com");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -40,15 +40,13 @@ export default function AuthPage({ onAuthenticated, onCancel }) {
         {error && <div className="auth-error" role="alert">{error}</div>}
         <form className="auth-form" onSubmit={signIn}>
           <label htmlFor="login-email">Email address</label>
-          <input id="login-email" type="email" autoComplete="username" required value={email} onChange={(event) => setEmail(event.target.value)} placeholder="Owner email" />
+          <input id="login-email" type="email" autoComplete="username" required value={email} onChange={(event) => setEmail(event.target.value)} placeholder="jayesh@gmail.com" />
           <label htmlFor="login-password">Password</label>
-          <input id="login-password" type="password" autoComplete="current-password" required value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Owner password" />
+          <input id="login-password" type="password" autoComplete="current-password" required value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Enter your password" />
           <button className="auth-submit" type="submit" disabled={isSubmitting}>{isSubmitting ? "Signing in…" : "Sign in"}</button>
         </form>
-        {onCancel && <button className="auth-cancel" type="button" onClick={onCancel}>Back to public demo</button>}
       </section>
       <span className="auth-copyright">GATHER <b>·</b> EVEN8</span>
     </main>
   );
 }
-

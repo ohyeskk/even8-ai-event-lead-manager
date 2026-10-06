@@ -105,4 +105,3 @@ export default async function handler(req, res) {
     return sendJson(res, 502, { error: "Could not reach Gemini. Check your connection and try again." });
   }
 }
-

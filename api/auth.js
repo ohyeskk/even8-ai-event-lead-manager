@@ -31,4 +31,3 @@ export default async function handler(req, res) {
   res.setHeader("Set-Cookie", createSessionCookie(process.env.APP_LOGIN_EMAIL));
   return sendJson(res, 200, { authenticated: true, email: process.env.APP_LOGIN_EMAIL });
 }
-

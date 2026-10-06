@@ -64,4 +64,3 @@ test("login rejects a mismatched request origin", async () => {
   assert.equal(res.statusCode, 403);
   assert.equal(res.headers["Set-Cookie"], undefined);
 });
-

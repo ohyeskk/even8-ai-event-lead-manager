@@ -1,10 +1,9 @@
 import { parseBody, sendJson, supabaseRequest, validateLead } from "../lib/api-utils.js";
-import { getSession, requireAuth } from "../lib/auth.js";
-import { demoLeads } from "../lib/demo-leads.js";
+import { requireAuth } from "../lib/auth.js";
 
 export default async function handler(req, res) {
   if (req.method === "GET") {
-    if (!getSession(req)) return sendJson(res, 200, demoLeads);
+    if (!requireAuth(req, res)) return;
     try {
       const leads = await supabaseRequest("leads?select=id,name,company,email,event,notes,follow_up_status,created_at,updated_at&order=created_at.desc");
       return sendJson(res, 200, leads || []);
@@ -34,4 +33,3 @@ export default async function handler(req, res) {
   res.setHeader("Allow", "GET, POST");
   return sendJson(res, 405, { error: "Method not allowed." });
 }
-

@@ -41,4 +41,3 @@ export default async function handler(req, res) {
   res.setHeader("Allow", "PATCH, DELETE");
   return sendJson(res, 405, { error: "Method not allowed." });
 }
-

@@ -11,17 +11,6 @@ const EMPTY_LEAD = {
   notes: "",
   follow_up_status: "New",
 };
-const DEMO_STORAGE_KEY = "gather-public-demo-leads-v1";
-
-function readDemoLeads(serverLeads) {
-  try {
-    const saved = JSON.parse(localStorage.getItem(DEMO_STORAGE_KEY) || "null");
-    return Array.isArray(saved) ? saved : serverLeads;
-  } catch {
-    return serverLeads;
-  }
-}
-
 function Icon({ name, size = 18 }) {
   const common = {
     width: size,
@@ -70,7 +59,6 @@ function formatDate(value) {
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [leads, setLeads] = useState([]);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All statuses");
@@ -94,14 +82,14 @@ function App() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Could not load leads.");
       const loadedLeads = Array.isArray(data) ? data : [];
-      setLeads(isAuthenticated ? loadedLeads : readDemoLeads(loadedLeads));
+      setLeads(loadedLeads);
       setLoadError("");
     } catch (error) {
       setLoadError(error.message || "Could not connect to the lead database.");
     } finally {
       setIsLoading(false);
     }
-  }, [isAuthenticated]);
+  }, []);
 
   useEffect(() => {
     async function initializeSession() {
@@ -110,12 +98,15 @@ function App() {
         const authData = await authResponse.json();
         if (!authResponse.ok) throw new Error(authData.error || "Could not check your sign-in status.");
         const authenticated = Boolean(authData.authenticated);
-        const leadResponse = await fetch("/api/leads");
-        const leadData = await leadResponse.json();
-        if (!leadResponse.ok) throw new Error(leadData.error || "Could not load leads.");
         setIsAuthenticated(authenticated);
-        const loadedLeads = Array.isArray(leadData) ? leadData : [];
-        setLeads(authenticated ? loadedLeads : readDemoLeads(loadedLeads));
+        if (authenticated) {
+          const leadResponse = await fetch("/api/leads");
+          const leadData = await leadResponse.json();
+          if (!leadResponse.ok) throw new Error(leadData.error || "Could not load leads.");
+          setLeads(Array.isArray(leadData) ? leadData : []);
+        } else {
+          setLeads([]);
+        }
         setLoadError("");
       } catch (error) {
         setLoadError(error.message || "Could not connect to the app server.");
@@ -141,7 +132,6 @@ function App() {
   const qualified = leads.filter((lead) => lead.follow_up_status === "Qualified").length;
 
   async function handleAuthenticated() {
-    setIsLoginOpen(false);
     setIsAuthenticated(true);
     await loadLeads();
   }
@@ -149,23 +139,15 @@ function App() {
   async function signOut() {
     try {
       await fetch("/api/auth", { method: "DELETE" });
-      const response = await fetch("/api/leads");
-      const data = await response.json();
-      if (response.ok) setLeads(readDemoLeads(Array.isArray(data) ? data : []));
     }
     finally {
-      setIsLoginOpen(false);
       setIsAuthenticated(false);
+      setLeads([]);
     }
   }
 
-  function saveDemoLeads(nextLeads) {
-    setLeads(nextLeads);
-    try { localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(nextLeads)); } catch { /* Keep the current page usable if browser storage is unavailable. */ }
-  }
-
-  if (!authChecked) return <main className="auth-page"><div className="summary-loading"><span className="spinner" /><strong>Opening the demo…</strong></div></main>;
-  if (isLoginOpen) return <AuthPage onAuthenticated={handleAuthenticated} onCancel={() => setIsLoginOpen(false)} />;
+  if (!authChecked) return <main className="auth-page"><div className="summary-loading"><span className="spinner" /><strong>Checking sign-in…</strong></div></main>;
+  if (!isAuthenticated) return <AuthPage onAuthenticated={handleAuthenticated} />;
 
   function openCreateForm() {
     setEditingLead(null);
@@ -192,23 +174,6 @@ function App() {
     setNotice("");
     try {
       const editing = Boolean(editingLead);
-      if (!isAuthenticated) {
-        const now = new Date().toISOString();
-        const updatedLead = {
-          ...formValues,
-          id: editingLead?.id || `demo-${crypto.randomUUID()}`,
-          created_at: editingLead?.created_at || now,
-          updated_at: now,
-        };
-        saveDemoLeads(editing
-          ? leads.map((lead) => lead.id === editingLead.id ? updatedLead : lead)
-          : [updatedLead, ...leads]);
-        setNotice(editing ? "Demo lead updated in this browser." : "Demo lead added in this browser.");
-        setEditingLead(null);
-        setIsFormOpen(false);
-        setFormValues(EMPTY_LEAD);
-        return;
-      }
       const response = await fetch(editing ? `/api/leads/${editingLead.id}` : "/api/leads", {
         method: editing ? "PATCH" : "POST",
         headers: { "Content-Type": "application/json" },
@@ -232,13 +197,8 @@ function App() {
   }
 
   async function deleteLead(lead) {
-    if (!window.confirm(`Delete ${lead.name} from ${isAuthenticated ? "your leads" : "this browser's demo"}?`)) return;
+    if (!window.confirm(`Delete ${lead.name} from your leads?`)) return;
     setNotice("");
-    if (!isAuthenticated) {
-      saveDemoLeads(leads.filter((item) => item.id !== lead.id));
-      setNotice("Demo lead deleted from this browser.");
-      return;
-    }
     try {
       const response = await fetch(`/api/leads/${lead.id}`, { method: "DELETE" });
       const data = await response.json();
@@ -251,11 +211,6 @@ function App() {
   }
 
   async function summarizeNotes(lead) {
-    if (!isAuthenticated) {
-      setNotice("Sign in as the owner to use AI summaries.");
-      setIsLoginOpen(true);
-      return;
-    }
     const requestId = ++summaryRequestId.current;
     setSummaryLead(lead);
     setSummary("");
@@ -314,11 +269,10 @@ function App() {
       <main className="main-content" id="top">
         <header className="topbar">
           <div className="breadcrumbs"><span>Workspace</span><Icon name="chevron" size={14} /><strong>Leads</strong></div>
-          <div className="topbar-right"><span className="live-dot" /> {isAuthenticated ? "Owner workspace" : "Interactive demo"} <div className="top-avatar">E</div><button className="text-button" onClick={isAuthenticated ? signOut : () => setIsLoginOpen(true)}>{isAuthenticated ? "Sign out" : "Owner sign in"}</button></div>
+          <div className="topbar-right"><span className="live-dot" /> Owner workspace <div className="top-avatar">E</div><button className="text-button" onClick={signOut}>Sign out</button></div>
         </header>
 
         <div className="content-wrap" id="leads">
-          {!isAuthenticated && <div className="demo-banner" role="status"><strong>Public demo</strong><span>Try adding, editing, searching, and deleting sample leads. Your changes stay in this browser and reset is available by clearing site data.</span></div>}
           <section className="page-heading">
             <div>
               <p className="eyebrow">EVENT RELATIONSHIPS <span>·</span> 2026</p>
@@ -363,7 +317,7 @@ function App() {
                 </>
               )}
             </div>
-            <p className="privacy-note"><span>✳</span> {isAuthenticated ? "AI summaries are based only on the saved conversation notes." : "Owner sign-in is required for AI summaries; public demo edits stay in this browser."}</p>
+            <p className="privacy-note"><span>✳</span> AI summaries are based only on the saved conversation notes.</p>
           </section>
           <footer className="footer-note"><span>Made for people who make events happen.</span><span>GATHER <b>·</b> EVEN8</span></footer>
         </div>
@@ -377,4 +331,3 @@ function App() {
 }
 
 export default App;
-
