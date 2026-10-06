@@ -1,0 +1,94 @@
+.landing-page { min-height: 100vh; overflow: hidden; padding: 0 clamp(20px, 6vw, 88px); background: #faf9f6; color: #302c25; }
+.landing-header { width: min(1180px, 100%); height: 78px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eeece6; }
+.landing-brand { display: inline-flex; align-items: center; gap: 9px; color: #302a25; font: 800 23px/1 Manrope, sans-serif; letter-spacing: -1.3px; }
+.landing-brand-mark { width: 26px; height: 26px; display: grid; grid-template-columns: 1fr 1fr; gap: 3px; transform: rotate(-8deg); }
+.landing-brand-mark i { display: block; border-radius: 6px 6px 3px 6px; background: #a58ce8; }
+.landing-brand-mark i:nth-child(2) { background: #f3b4a1; border-radius: 6px 6px 6px 3px; }
+.landing-brand-mark i:nth-child(3) { background: #f2cc78; border-radius: 6px 3px 6px 6px; }
+.landing-brand-mark i:nth-child(4) { background: #7dbfb1; border-radius: 3px 6px 6px 6px; }
+.landing-brand-dot { color: #9a7ce5; }
+.landing-header-label { margin-left: auto; margin-right: 28px; color: #9a958c; font-size: 9px; font-weight: 700; letter-spacing: 1.45px; }
+.landing-signin { min-height: 42px; display: inline-flex; align-items: center; justify-content: center; gap: 13px; border-radius: 10px; font-size: 12px; font-weight: 700; transition: background .18s ease, transform .18s ease; }
+.landing-signin-small { min-height: 36px; padding: 0 17px; border: 1px solid #e9e5dc; background: #fffefa; color: #514d44; }
+.landing-signin-small:hover { background: #f1ecfb; }
+.landing-hero { width: min(1180px, 100%); min-height: 500px; margin: 0 auto; padding: 70px 0 64px; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(320px, .95fr); align-items: center; gap: clamp(25px, 6vw, 85px); }
+.landing-copy { position: relative; z-index: 1; max-width: 590px; }
+.landing-eyebrow { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; color: #8b78b8; font-size: 9px; font-weight: 800; letter-spacing: 1.45px; }
+.landing-eyebrow i { width: 7px; height: 7px; border-radius: 50%; background: #92c5b2; box-shadow: 0 0 0 4px #e9f3ed; }
+.landing-copy h1 { max-width: 600px; margin: 0 0 17px; font: 700 clamp(42px, 5.5vw, 70px)/1.04 Manrope, sans-serif; letter-spacing: -3.6px; color: #302c25; }
+.landing-copy h1 em { color: #9275ce; font-family: Georgia, serif; font-weight: 400; }
+.landing-copy > p { max-width: 440px; margin: 0 0 27px; color: #858077; font-size: 14px; line-height: 1.8; }
+.landing-signin-primary { min-height: 48px; padding: 0 19px; background: #8065c4; color: white; box-shadow: 0 8px 18px #8065c426; }
+.landing-signin-primary:hover { transform: translateY(-2px); background: #7055b5; }
+.landing-signin-primary span { font-size: 17px; font-weight: 400; }
+.landing-private-note { display: block; margin-top: 13px; color: #aaa59b; font-size: 10px; }
+.landing-visual { min-height: 340px; position: relative; display: grid; place-items: center; }
+.landing-orbit { position: absolute; border: 1px solid #eae4f2; border-radius: 50%; }
+.landing-orbit-one { width: 330px; height: 330px; }
+.landing-orbit-two { width: 415px; height: 415px; border-color: #f0ece5; }
+.landing-note-card { position: relative; z-index: 1; width: min(100%, 350px); min-height: 245px; padding: 22px; border: 1px solid #eee9e1; border-radius: 19px; background: #fffefa; box-shadow: 0 28px 65px #3b315018; transform: rotate(2deg); }
+.landing-card-top { display: flex; align-items: center; gap: 9px; color: #a39baf; font-size: 8px; letter-spacing: 1px; font-weight: 800; }
+.landing-card-icon { width: 27px; height: 27px; display: grid; place-items: center; border-radius: 9px; background: #f0eafa; color: #896ac5; font-size: 16px; }
+.landing-card-dots { margin-left: auto; font-size: 20px; letter-spacing: 2px; }
+.landing-card-title { margin-top: 28px; color: #484239; font: 700 23px/1.25 Manrope, sans-serif; letter-spacing: -.7px; }
+.landing-card-lines { margin-top: 19px; display: grid; gap: 8px; }
+.landing-card-lines i { height: 6px; border-radius: 10px; background: #f0eee9; }
+.landing-card-lines i:nth-child(1) { width: 94%; }
+.landing-card-lines i:nth-child(2) { width: 78%; }
+.landing-card-lines i:nth-child(3) { width: 58%; }
+.landing-card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 14px; border-top: 1px solid #f0eee8; color: #89847b; font-size: 9px; }
+.landing-card-footer span:first-child { display: inline-flex; align-items: center; gap: 7px; }
+.landing-card-footer i { width: 7px; height: 7px; border-radius: 50%; background: #91c4ad; }
+.landing-spark { position: absolute; z-index: 2; color: #a68bdb; }
+.landing-spark-one { top: 44px; right: 11%; font-size: 30px; }
+.landing-spark-two { bottom: 40px; left: 9%; color: #e2ad83; font-size: 23px; }
+.landing-features { width: min(1180px, 100%); margin: 0 auto; padding: 27px 0 30px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid #eeece6; border-bottom: 1px solid #eeece6; }
+.landing-features article { display: flex; gap: 14px; padding: 6px clamp(8px, 2vw, 28px); border-right: 1px solid #eeece6; }
+.landing-features article:first-child { padding-left: 0; }
+.landing-features article:last-child { padding-right: 0; border: 0; }
+.landing-feature-number { color: #a28bcf; font-size: 9px; font-weight: 800; letter-spacing: 1px; }
+.landing-features strong { color: #504b42; font-size: 12px; }
+.landing-features p { margin: 5px 0 0; color: #98938a; font-size: 10px; line-height: 1.55; }
+.landing-footer { width: min(1180px, 100%); min-height: 75px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.landing-footer .landing-brand { font-size: 16px; }
+.landing-footer .landing-brand-mark { width: 19px; height: 19px; gap: 2px; }
+.landing-footer > span { color: #aaa59c; font-size: 8px; font-weight: 700; letter-spacing: 1px; }
+.landing-footer b { color: #a88fda; }
+@media (max-width: 850px) {
+  .landing-hero { min-height: 440px; grid-template-columns: minmax(0, 1fr) minmax(260px, .8fr); gap: 22px; padding: 60px 0 50px; }
+  .landing-copy h1 { font-size: clamp(40px, 6vw, 56px); letter-spacing: -2.7px; }
+  .landing-visual { min-height: 300px; }
+  .landing-orbit-one { width: 270px; height: 270px; }
+  .landing-orbit-two { width: 340px; height: 340px; }
+  .landing-note-card { padding: 19px; }
+}
+@media (max-width: 640px) {
+  .landing-page { padding: 0 20px; }
+  .landing-header { height: 67px; }
+  .landing-header-label { display: none; }
+  .landing-brand { font-size: 21px; }
+  .landing-hero { min-height: 0; padding: 53px 0 36px; grid-template-columns: 1fr; gap: 20px; }
+  .landing-eyebrow { margin-bottom: 16px; font-size: 8px; }
+  .landing-copy h1 { max-width: 500px; margin-bottom: 13px; font-size: clamp(42px, 12vw, 56px); letter-spacing: -2.8px; }
+  .landing-copy > p { max-width: 470px; margin-bottom: 21px; font-size: 13px; line-height: 1.7; }
+  .landing-signin-primary { width: 100%; }
+  .landing-visual { min-height: 240px; margin-top: 4px; }
+  .landing-orbit-one { width: 230px; height: 230px; }
+  .landing-orbit-two { width: 295px; height: 295px; }
+  .landing-note-card { width: min(100%, 300px); min-height: 215px; padding: 18px; }
+  .landing-card-title { margin-top: 20px; font-size: 20px; }
+  .landing-card-lines { margin-top: 14px; }
+  .landing-card-footer { margin-top: 15px; padding-top: 11px; }
+  .landing-spark-one { top: 12px; right: 8%; }
+  .landing-spark-two { bottom: 14px; left: 5%; }
+  .landing-features { grid-template-columns: 1fr; padding: 8px 0; }
+  .landing-features article, .landing-features article:first-child, .landing-features article:last-child { min-height: 65px; padding: 14px 2px; border-right: 0; border-bottom: 1px solid #eeece6; }
+  .landing-features article:last-child { border-bottom: 0; }
+  .landing-footer { min-height: 72px; }
+  .landing-footer > span:nth-child(2) { display: none; }
+}
+@media (max-width: 360px) {
+  .landing-page { padding-right: 16px; padding-left: 16px; }
+  .landing-copy h1 { font-size: 40px; letter-spacing: -2.4px; }
+  .landing-header .landing-signin-small { padding: 0 13px; }
+}

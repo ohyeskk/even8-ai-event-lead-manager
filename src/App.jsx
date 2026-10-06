@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import AuthPage from "./AuthPage.jsx";
+import LandingPage from "./LandingPage.jsx";
 import "./App.css";
 
 const STATUSES = ["New", "Contacted", "Follow-up due", "Qualified", "Closed"];
@@ -132,6 +133,7 @@ function App() {
   const qualified = leads.filter((lead) => lead.follow_up_status === "Qualified").length;
 
   async function handleAuthenticated() {
+    window.history.replaceState({}, "", "/app");
     setIsAuthenticated(true);
     await loadLeads();
   }
@@ -141,13 +143,18 @@ function App() {
       await fetch("/api/auth", { method: "DELETE" });
     }
     finally {
+      window.history.replaceState({}, "", "/");
       setIsAuthenticated(false);
       setLeads([]);
     }
   }
 
   if (!authChecked) return <main className="auth-page"><div className="summary-loading"><span className="spinner" /><strong>Checking sign-in…</strong></div></main>;
-  if (!isAuthenticated) return <AuthPage onAuthenticated={handleAuthenticated} />;
+  if (!isAuthenticated) {
+    return ["/login", "/app"].includes(window.location.pathname)
+      ? <AuthPage onAuthenticated={handleAuthenticated} />
+      : <LandingPage />;
+  }
 
   function openCreateForm() {
     setEditingLead(null);

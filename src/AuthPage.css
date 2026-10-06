@@ -21,9 +21,9 @@
 .auth-submit { height: 44px; margin-top: 11px; border: 0; border-radius: 9px; background: #846bc2; color: white; font-size: 12px; font-weight: 700; transition: background .18s ease; }
 .auth-submit:hover:not(:disabled) { background: #7058ad; }
 .auth-footnote { margin: 19px 0 0; color: #99958d; font-size: 10px; line-height: 1.6; text-align: center; }
-.auth-cancel { display: block; margin: 18px auto 0; border: 0; background: none; color: #716a61; font: inherit; font-size: 12px; cursor: pointer; }
-.auth-cancel:hover { color: #28241f; text-decoration: underline; }
+.auth-home-link { display: block; width: fit-content; margin: 19px auto 0; color: #7863ab; font-size: 11px; font-weight: 700; }
+.auth-home-link:hover { color: #554188; text-decoration: underline; }
+.auth-home-link:focus-visible, .auth-submit:focus-visible { outline: 3px solid #c4b2ed; outline-offset: 3px; }
 .auth-copyright { margin-top: 24px; color: #aaa69d; font-size: 9px; font-weight: 700; letter-spacing: 1.2px; }
 .auth-copyright b { color: #9a7ce5; }
 @media (max-width: 480px) { .auth-page { padding-right: 16px; padding-left: 16px; } .auth-card { padding: 27px 23px; } }
-

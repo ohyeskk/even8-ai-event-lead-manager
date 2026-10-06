@@ -45,6 +45,7 @@ export default function AuthPage({ onAuthenticated }) {
           <input id="login-password" type="password" autoComplete="current-password" required value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Enter your password" />
           <button className="auth-submit" type="submit" disabled={isSubmitting}>{isSubmitting ? "Signing in…" : "Sign in"}</button>
         </form>
+        <a className="auth-home-link" href="/">Back to home</a>
       </section>
       <span className="auth-copyright">GATHER <b>·</b> EVEN8</span>
     </main>

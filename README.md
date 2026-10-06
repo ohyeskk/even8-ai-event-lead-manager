@@ -8,6 +8,7 @@ A small AI-assisted event lead manager built for the Even8 AI Native Full Stack 
 
 - Add, edit, delete, search, and filter leads.
 - Track name, company, email, event, notes, and follow-up status.
+- Public landing page with a sign-in link to the private workspace.
 - A single owner sign-in protects the lead workspace, Supabase CRUD, and AI note summaries.
 - Gemini creates concise summaries from saved lead notes.
 - Responsive React interface for desktop and mobile.
